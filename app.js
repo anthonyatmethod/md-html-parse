@@ -62,10 +62,10 @@ require('walker')('./markdown-root')
         console.warn('creating : ', dir);
 
         //removes the first folder name, and adds html to the end of path
-        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift()) + '.html';
+        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
 
         //should point to index or page2 folders
-        //var handleBarsRoot = dir.split('/').shift().join('/');
+        // var handleBarsRoot = dir.split('/').shift().join('/');
 
 
         console.warn('htmlFileName', htmlFileName);
