@@ -6,3 +6,4 @@ Dependencies
   - markdown-it
   - mkdirp
   - walker
+  - lodash
