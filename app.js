@@ -15,15 +15,15 @@ var app = express();
 var expressHandlebars = require('express-handlebars');
 app.set('views', path.join(__dirname, 'handlebars-root'));
 app.engine('.hbs', expressHandlebars({
-    defaultLayout: 'layout',
-    extname: '.hbs'
+  defaultLayout: 'layout',
+  extname: '.hbs'
 }));
-app.set('view engine', '.hbs'); //node app started gonna generate the blog
+app.set('view engine', '.hbs'); //node app started
 console.log('starting generation of your blog.');
 
 //setup md
 var md = require('markdown-it')();
-var result = md.render('# markdown-it rulezz!');
+var result = md.render('# markdown-it running!');
 console.warn(result);
 
 //setup slimdown.js
@@ -40,62 +40,65 @@ del.sync('./' + hbsFolder + '/*');
 del.sync('./' + htmlFolder + '/*');
 
 require('walker')('./markdown-root')
-.on('dir', function(dir,stat) {
-    console.warn('creating : ',dir);
-    mkdirp.sync(dir.replace(mdFolder,hbsFolder),function(err){
-        console.error(err);
+  .on('dir', function(dir, stat) {
+    console.warn('creating : ', dir);
+    mkdirp.sync(dir.replace(mdFolder, hbsFolder), function(err) {
+      console.error(err);
     });
-})
-.on('file', function(file, stat) {
-  console.log('Got file: ' + file);
-  var markDownContent = fs.readFileSync(file,'utf8');
-  var handlebarsContent = slimdown.render(md.render(markDownContent)); //convert to handlebars
-  var newFileName = (file.split('.md')[0] + '.hbs').replace(mdFolder,hbsFolder);
-  console.log('newNewFileName',newFileName);
-  fs.writeFileSync(newFileName, handlebarsContent);//write the output in the corresponding folder in the handlebar-root folder
-})
-.on('end', function() {
-  console.info('generated the HBS files successfully!');
-
-  require('walker')('./' + hbsFolder)
-  .on('dir', function(dir,stat) {
-      console.warn('creating : ', dir);
-
-      //removes the first folder name, and adds html to the end of path
-      var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
-
-      //should point to index or page2 folders
-      //var handleBarsRoot = dir.split('/').shift().join('/');
-
-
-      console.warn('htmlFineName',htmlFineName);
-
-
-      app.set('views', path.join(__dirname, 'handlebars-root' + dir));
-      app.render('templateName',function(html,err){
-        if(err)...
-
-
-        fs.writeFileSync(htmlFileName, html);
-      });
   })
-
-  .on('end', function(){
-    console.info('generated the HTML files successfully! Enjoy!');
+  .on('file', function(file, stat) {
+    console.log('Got file: ' + file);
+    var markDownContent = fs.readFileSync(file, 'utf8');
+    var handlebarsContent = slimdown.render(md.render(markDownContent)); //convert to handlebars
+    var newFileName = (file.split('.md')[0] + '.hbs').replace(mdFolder, hbsFolder);
+    console.log('newNewFileName', newFileName);
+    fs.writeFileSync(newFileName, handlebarsContent); //write the output in the corresponding folder in the handlebar-root folder
   })
+  .on('end', function() {
+    console.info('generated the HBS files successfully!');
 
-});
+    require('walker')('./' + hbsFolder)
+      .on('dir', function(dir, stat) {
+        console.warn('creating : ', dir);
+
+        //removes the first folder name, and adds html to the end of path
+        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift()) + '.html';
+
+        //should point to index or page2 folders
+        //var handleBarsRoot = dir.split('/').shift().join('/');
 
 
-    //grab folder name :  index  and folder path
+        console.warn('htmlFileName', htmlFileName);
 
-    //set that folder as views root to handlebars
 
-    //genertate index.html file
+        app.set('views', path.join(__dirname, 'handlebars-root' + dir));
+        app.render('templateName', function(html, err) {
+          if (err){
+            console.log('error');
 
-    //write the content to html-root/index.html   //  html-root/subfolder1/subpage1.html
+          }
 
-//spinup the html server and serve html-root as static.
+
+          fs.writeFileSync(htmlFileName, html);
+        });
+      })
+
+    .on('end', function() {
+      console.info('generated the HTML files successfully! Enjoy!');
+    })
+
+  });
+
+
+//TODO: grab folder name :  index  and folder path
+
+//TODO: set that folder as views root to handlebars
+
+//TODO: genertate index.html file
+
+//TODO: write the content to html-root/index.html   //  html-root/subfolder1/subpage1.html
+
+//TODO:  spinup the html server and serve html-root as static.
 
 // view engine setup
 /*app.set('views', path.join(__dirname, 'handlebar-views'));
@@ -105,7 +108,9 @@ app.set('view engine', 'hbs');*/
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'html-root')));
 
