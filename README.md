@@ -9,7 +9,8 @@ Dependencies
 
 ```
 Unable to squash bug: app.js line 64
-var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
 
-error thrown at beginning of join function
+> var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
+
+Error thrown at beginning of join function
 ```
