@@ -10,26 +10,32 @@ var users = require('./routes/users');
 var mkdirp = require('mkdirp');
 var del = require('del');
 var _ = require('lodash');
+
+
+
 var app = express();
 
+// express handlebars .est
 var expressHandlebars = require('express-handlebars');
 app.set('views', path.join(__dirname, 'handlebars-root'));
 app.engine('.hbs', expressHandlebars({
   defaultLayout: 'layout',
   extname: '.hbs'
 }));
-app.set('view engine', '.hbs'); //node app started
+
+
+app.set('view engine', '.hbs'); //node app .est
 console.log('starting generation of your blog.');
 
-//setup md
+//markdownit .est
 var md = require('markdown-it')();
 var result = md.render('# markdown-it running!');
 console.warn(result);
 
-//setup slimdown.js
+//slimdown.js .est
 var slimdown = require('./slimdown');
 
-console.warn(slimdown.render('#  Title\n\nAnd *now* [a link](http://www.google.com) to **follow** and [another](http://yahoo.com/).\n\n* One\n* Two\n* Three\n\n## Subhead\n\nOne **two** three **four** five.\n\nOne __two__ three _four_ five __six__ seven _eight_.\n\n1. One\n2. Two\n3. Three\n\nMore text with `inline($code)` and :"quote": sample.\n\n> A block quote\n> across two lines.\nMore text...'));
+// console.warn(slimdown.render('#  Title\n\nAnd *now* [a link](http://www.google.com) to **follow** and [another](http://yahoo.com/).\n\n* One\n* Two\n* Three\n\n## Subhead\n\nOne **two** three **four** five.\n\nOne __two__ three _four_ five __six__ seven _eight_.\n\n1. One\n2. Two\n3. Three\n\nMore text with `inline($code)` and :"quote": sample.\n\n> A block quote\n> across two lines.\nMore text...'));
 
 //read the markdown-root folder recursively
 var mdFolder = 'markdown-root';
@@ -39,6 +45,7 @@ var htmlFolder = 'html-root';
 del.sync('./' + hbsFolder + '/*');
 del.sync('./' + htmlFolder + '/*');
 
+// walker .est
 require('walker')('./markdown-root')
   .on('dir', function(dir, stat) {
     console.warn('creating : ', dir);
@@ -62,7 +69,8 @@ require('walker')('./markdown-root')
         console.warn('creating : ', dir);
 
         //removes the first folder name, and adds html to the end of path
-        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
+        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift()) + '.html';
+        // var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
 
         //should point to index or page2 folders
         // var handleBarsRoot = dir.split('/').shift().join('/');
@@ -73,12 +81,9 @@ require('walker')('./markdown-root')
 
         app.set('views', path.join(__dirname, 'handlebars-root' + dir));
         app.render('templateName', function(html, err) {
-          if (err){
-            console.log('error');
-
+          if (err) {
+            console.log(err);
           }
-
-
           fs.writeFileSync(htmlFileName, html);
         });
       })
@@ -113,14 +118,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'html-root')));
-
-
-
-
-
-
-
-
 
 
 

@@ -6,6 +6,7 @@ Dependencies
 - mkdirp
 - walker
 - lodash
+- del
 
 ```
 Unable to squash bug: app.js line 64
