@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var mkdirp = require('mkdirp');
 var del = require('del');
 var _ = require('lodash');
+var path = require('path');
 
 
 
@@ -67,9 +68,11 @@ require('walker')('./markdown-root')
     require('walker')('./' + hbsFolder)
       .on('dir', function(dir, stat) {
         console.warn('creating : ', dir);
-
+        var htmlFileName = path.join(htmlFolder,dir.split('/').shift());
+        htmlFileName+=".html";
+        console.log('-------------------------',htmlFileName)
         //removes the first folder name, and adds html to the end of path
-        var htmlFileName = htmlFolder + '/' + (dir.split('/').shift()) + '.html';
+        //var htmlFileName = htmlFolder + '/' + (dir.split('/').shift()) + '.html';
         // var htmlFileName = htmlFolder + '/' + (dir.split('/').shift().join('/')) + '.html';
 
         //should point to index or page2 folders
@@ -106,6 +109,9 @@ require('walker')('./markdown-root')
 //TODO:  spinup the html server and serve html-root as static.
 
 // view engine setup
+
+
+
 app.set('views', path.join(__dirname, 'handlebar-views'));
 app.set('view engine', 'hbs');
 
